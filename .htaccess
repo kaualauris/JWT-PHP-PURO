@@ -1,0 +1,16 @@
+RewriteEngine On
+
+# 1. Redireciona tudo para a pasta public se o usuário acessar a raiz
+RewriteRule ^$ public/index.php [L]
+
+# 2. Se o arquivo ou pasta não existir fisicamente...
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# 3. ...mande a requisição para public/index.php
+# O [QSA] garante que os parâmetros (como ?id=1) não sejam perdidos
+# O [L] diz que esta é a última regra a ser processada
+RewriteRule ^(.*)$ public/index.php [QSA,L]
+
+# Garante que o cabeçalho Authorization (JWT) chegue ao PHP
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
